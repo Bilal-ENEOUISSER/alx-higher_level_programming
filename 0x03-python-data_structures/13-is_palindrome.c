@@ -1,57 +1,35 @@
+#include <stddef.h>
+#include <stdio.h>
 #include "lists.h"
 
 /**
- * reverse_listint - Reverses a linked list in place
- * @head: Pointer to the head of the list
- * Return: Pointer to the new head of the reversed list
- */
-listint_t *reverse_listint(listint_t **head)
-{
-    listint_t *prev = NULL, *current = *head, *next = NULL;
-
-    while (current != NULL)
-    {
-        next = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
-    }
-
-    *head = prev;
-    return *head;
-}
-
-/**
- * is_palindrome - Identifies if a singly linked list is a palindrome
- * @head: Pointer to the head of the list
- * Return: 1 if it is a palindrome, 0 otherwise
+ * is_palindrome - check if a linked list is a palindrome
+ *
+ * @head: first node
+ *
+ * Return: 1 if success
+ *         0 if failed
  */
 int is_palindrome(listint_t **head)
 {
-    listint_t *slow = *head, *fast = *head, *prev_slow = *head;
+	listint_t *tmp = *head;
+	int values[2048], i = 0, cLoop, limit;
 
-    if (*head == NULL || (*head)->next == NULL)
-        return 1;
+	if (head == NULL || *head == NULL)
+		return (1);
 
-    // Move fast to the end and slow to the middle
-    while (fast != NULL && fast->next != NULL)
-    {
-        fast = fast->next->next;
-        prev_slow = slow;
-        slow = slow->next;
-    }
+	while (tmp != NULL)
+	{
+		values[i] = tmp->n;
+		i++;
+		tmp = tmp->next;
+	}
 
-    // Reverse the second half of the list
-    prev_slow->next = reverse_listint(&slow);
+	limit = (i % 2 == 0) ? i / 2 : (i + 1) / 2;
 
-    // Compare the reversed second half with the first half
-    while (slow != NULL)
-    {
-        if ((*head)->n != slow->n)
-            return 0;
-        *head = (*head)->next;
-        slow = slow->next;
-    }
+	for (cLoop = 0; cLoop < limit; cLoop++)
+		if (values[cLoop] != values[i - 1 - cLoop])
+			return (0);
 
-    return 1;
+	return (1);
 }
