@@ -1,59 +1,83 @@
-#include "lists.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "lists.h"
 
 /**
- * reverse_listint - Reverses a linked list in place
- * @head: Pointer to the head of the list
- * Return: Pointer to the new head of the reversed list
- */
-listint_t *reverse_listint(listint_t **head)
+  * is_palindrome - Checks if a singly linked list is a palindrome
+  * @head: The head of the singly linked list
+  *
+  * Return: 0 if it is not a palindrome, 1 if it is a palindrome
+  */
+int is_palindrome(listint_t **head)
 {
-    listint_t *prev = NULL, *current = *head, *next = NULL;
+    listint_t *start = NULL, *end = NULL;
+    unsigned int i = 0, len = 0, len_cyc = 0, len_list = 0;
 
-    while (current != NULL)
+    if (head == NULL)
+        return (0);
+
+    if (*head == NULL)
+        return (1);
+    
+    start = *head;
+    len = listint_len(start);
+    len_cyc = len * 2;
+    len_list = len_cyc - 2;
+    end = *head;
+
+    for (; i < len_cyc; i = i + 2)
     {
-        next = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
+        if (start[i].n != end[len_list].n)
+            return (0);
+
+        len_list = len_list - 2;
     }
 
-    *head = prev;
-    return *head;
+    return (1);
 }
 
 /**
- * is_palindrome - Identifies if a singly linked list is a palindrome
- * @head: Pointer to the head of the list
- * Return: 1 if it is palindrome else 0
- */
-int is_palindrome(listint_t **head)
+  * get_nodeint_at_index - Gets a node from a linked list
+  * @head: The head of the linked list
+  * @index: The index to find in the linked list
+  *
+  * Return: The specific node of the linked list
+  */
+listint_t *get_nodeint_at_index(listint_t *head, unsigned int index)
 {
-    listint_t *slow = *head, *fast = *head, *prev_slow = *head;
-    
-    if (*head == NULL || (*head)->next == NULL)
-        return 1;
+	listint_t *current = head;
+	unsigned int iter_times = 0;
 
-    // Move fast to the end and slow to the middle
-    while (fast != NULL && fast->next != NULL)
-    {
-        fast = fast->next->next;
-        prev_slow = slow;
-        slow = slow->next;
-    }
+	if (head)
+	{
+		while (current != NULL)
+		{
+			if (iter_times == index)
+				return (current);
 
-    // Reverse the second half of the list
-    prev_slow->next = reverse_listint(&slow);
+			current = current->next;
+			++iter_times;
+		}
+	}
 
-    // Compare the reversed second half with the first half
-    while (slow != NULL)
-    {
-        if ((*head)->n != slow->n)
-            return 0;
-        *head = (*head)->next;
-        slow = slow->next;
-    }
+	return (NULL);
+}
 
-    return 1;
+/**
+  * slistint_len - Counts the number of elements in a linked list
+  * @h: The linked list to count
+  *
+  * Return: Number of elements in the linked list
+  */
+size_t listint_len(const listint_t *h)
+{
+	int lenght = 0;
+
+	while (h != NULL)
+	{
+		++lenght;
+		h = h->next;
+	}
+
+	return (lenght);
 }
